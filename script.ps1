@@ -8,7 +8,7 @@ $apps = @(
     "Microsoft.DotNet.Framework.DeveloperPack_4",
     "Dell.CommandUpdate.Universal",
     "Microsoft.DotNet.DesktopRuntime.7",
-    "TeamViewer.TeamViewer.Host",
+    "TeamViewer.TeamViewer.Host"
     
     
 )
