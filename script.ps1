@@ -1,15 +1,25 @@
-# 1. Povolení spouštění skriptů pro aktuální proces
-Set-ExecutionPolicy Bypass -Scope Process -Force
+# 1. Vynucení TLS 1.2 pro bezpečné stažení z GitHubu
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-Write-Host "--- Inicializace Wingetu pro 100 PC ---" -ForegroundColor Yellow
+Write-Host "--- Oprava Winget rozhraní (Update AppInstaller) ---" -ForegroundColor Yellow
 
-# 2. Fix pro chybu 0x8a15005e (Reset a aktualizace zdrojů)
-# Tento krok zajistí, že si Winget "sáhne" pro aktuální databázi aplikací
+# 2. Stažení nejnovějšího balíčku Winget přímo od Microsoftu
+$url = "https://github.com/microsoft/winget-cli/releases/latest/download/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
+$tempPath = "$env:TEMP\winget_update.msixbundle"
+
+try {
+    Invoke-WebRequest -Uri $url -OutFile $tempPath -ErrorAction Stop
+    Add-AppxPackage -Path $tempPath -ErrorAction Stop
+    Write-Host "Winget byl úspěšně aktualizován." -ForegroundColor Green
+} catch {
+    Write-Host "Chyba při aktualizaci Wingetu: $_" -ForegroundColor Red
+}
+
+# 3. Reset zdrojů po aktualizaci
 winget source reset --force
-winget source update
-Start-Sleep -Seconds 3 # Krátká pauza na rozdýchání systému
+Start-Sleep -Seconds 5
 
-# Seznam aplikací
+# 4. Seznam aplikací k instalaci
 $apps = @(
     "Google.Chrome",
     "VideoLAN.VLC",
@@ -24,20 +34,7 @@ $apps = @(
 
 foreach ($app in $apps) {
     Write-Host "Instaluji: $app" -ForegroundColor Cyan
-    
-    # --id: přesná identifikace
-    # --silent: bez ptaní
-    # --accept-source-agreements: odsouhlasení podmínek Microsoftu
-    # --accept-package-agreements: odsouhlasení podmínek tvůrce aplikace
-    # --force: vynucení instalace i když si Winget myslí, že už tam něco je
-    
     winget install --id $app --silent --accept-source-agreements --accept-package-agreements --force
-    
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "Varování: Instalace $app selhala (Error kód: $LASTEXITCODE)" -ForegroundColor Red
-    } else {
-        Write-Host "Úspěšně nainstalováno: $app" -ForegroundColor Green
-    }
 }
 
-Write-Host "--- Hotovo! Všechny naplánované úlohy dokončeny. ---" -ForegroundColor Green
+Write-Host "--- Vše hotovo! ---" -ForegroundColor Green
