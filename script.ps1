@@ -2,7 +2,15 @@
 $apps = @(
     "Google.Chrome",
     "VideoLAN.VLC",
-    "7zip.7zip"
+    "7zip.7zip",
+    "Mozilla.Firefox",
+    "Adobe.Acrobat.Reader.64-bit",
+    "Microsoft.DotNet.Framework.DeveloperPack_4",
+    "Dell.CommandUpdate.Universal",
+    "Microsoft.DotNet.DesktopRuntime.7",
+    "TeamViewer.TeamViewer.Host",
+    
+    
 )
 
 foreach ($app in $apps) {
