@@ -2,10 +2,7 @@
 $apps = @(
     "Google.Chrome",
     "VideoLAN.VLC",
-    "7zip.7zip",
-    "Discord.Discord",
-    "Spotify.Spotify",
-    "VisualStudioCode.VSCode"
+    "7zip.7zip"
 )
 
 foreach ($app in $apps) {
@@ -14,3 +11,4 @@ foreach ($app in $apps) {
 }
 
 Write-Host "Hotovo! Vše je nainstalováno." -ForegroundColor Green
+
